@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code2Binary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #binaryOutput {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            margin-top: 20px;
+        }
+
+        .single-transistor {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .single-transistor .transistor {
+            margin: 0 auto;
+            width: 100px;
+            height: 100px;
+            background-color: #ddd;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .single-transistor .transistor.on {
+            background-color: #4CAF50; /* Green for current */
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Code2Binary</h1>
+        <textarea id="codeInput" placeholder="Enter Your Code Here..."></textarea>
+        <button id="convertButton">Binary Vision</button>
+        <h2>Binary Representation</h2>
+        <div id="binaryOutput"></div>
+
+        <h2>Transistor State</h2>
+        <div class="single-transistor">
+            <div id="singleTransistor" class="transistor">-</div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('convertButton').addEventListener('click', function () {
+            const codeInput = document.getElementById('codeInput').value;
+            const binaryOutput = textToBinary(codeInput);
+            document.getElementById('binaryOutput').textContent = binaryOutput;
+
+            // Start simulation
+            startSimulation(binaryOutput);
+        });
+
+        function textToBinary(text) {
+            return text
+                .split('')
+                .map(char => char.charCodeAt(0).toString(2).padStart(8, '0'))
+                .join(' ');
+        }
+
+        function startSimulation(binary) {
+            const singleTransistor = document.getElementById('singleTransistor');
+
+            // Reset single transistor display
+            singleTransistor.textContent = '-';
+            singleTransistor.className = 'transistor';
+
+            // Simulate each bit
+            binary.split('').forEach((bit, index) => {
+                if (bit === ' ') return; // Skip spaces in binary output
+
+                setTimeout(() => {
+                    // Update single transistor state
+                    singleTransistor.textContent = bit;
+                    if (bit === '1') {
+                        singleTransistor.classList.add('on');
+                    } else {
+                        singleTransistor.classList.remove('on');
+                    }
+                }, index * 500); // 500ms delay for each bit
+            });
+        }
+    </script>
+</body>
+</html>
